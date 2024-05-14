@@ -70,17 +70,43 @@ Ponudniki likvidnosti Uniswapa V2 zaslužijo provizije le za majhen del svojega 
 \subsubsection{ Provizije}
 V Uniswap V2 se za vsako zamenjavo žetonov zaračuna fiksna provizija v višini 0,3 %. Ta provizija se razdeli med ponudnike likvidnosti glede na njihov delež likvidnostnih rezerv. Ko uporabniki izvedejo zamenjavo, se provizije, ki jih plačajo, takoj dodajo k likvidnostnim rezervam. Ponudniki likvidnosti lahko svoj delež provizij poberejo tako, da **burn** svoje likvidnostne tokene, s čimer se odstrani sorazmeren znesek osnovnih rezerv.
 
+\subsubsection{Zdrs (Slippage)}
+
+Ko uporabnik predloži transakcijo na Ethereum-u je hitrost izvedbe transakcije odvisna od cene izvedbe transakcije, ki jo je pripravljen plačati (gas price). Več kot plača gas, hitreje se bo transakcija izvedla. Če transakcija oziroma zamenjava (swap) dolgo čaka na izvedbo, se lahko razmerje valut v likvidnostnem bazenu v tem času spremeni, saj so se med čakanjem izvedle že druge zamenjave. To lahko pomeni, da bo uporabnik zaradi čakanja na izvedbo transakcije dobil manj željenih žetonov kot jih je pričakoval. 
+
+V ta namen je definirana toleranca za zdrs (Slippage tolerances), ki pove za koliko se lahko razmerje žetonov spremeni, da se transakcija še vedno izvede. Torej, če se razmerje žetonov v likvidnostnem bazenu med čakanjem transakcije na izvedbo spremeni za več kot to dovoljuje Slippage tolerance, se transakcija ne izvede in Uniswap verne napako INSUFFICIENT\_OUTPUT\_AMOUNT. 
+
+Definirana je tudi omejitev največ koliko časa lahko transakcija čaka preden se izvede (deadline). Če se transakcija ne izvede do roka se jo prekliče in Uniswap vrne napako Expired. S tem se uporabnika zaščiti pred dolgim čakanjem za izvedbo zamenjave in velikim spremembam cen.
+
 \subsection{Uniswap V3}
 
 Uniswap V3 je tretja verzija protokola, ki je izšla maja 2021 in prinesla veliko izboljšav. Med njimi je najpomebnejša koncentrirana likvidnost. 
 
 \subsubsection{Koncentrirana likvidnost}
 
-V sistemu Uniswap V2 so uporabniki torej svojo likvidnost razpršili po celotnem cenovnem razponu, v sistemu Uniswap V3 pa se lahko ponudniki likvidnosti odločijo, da bodo svoj denar skoncentrirali na določen cenovni razpon. Pri tem lahko združijo poljubno število različnih koncentriranih pozicij znotraj enega bazena/sklada.
+V sistemu Uniswap V2 so uporabniki torej svojo likvidnost razpršili po celotnem cenovnem razponu, v sistemu Uniswap V3 pa se lahko ponudniki likvidnosti odločijo, da bodo svoj denar skoncentrirali na določen cenovni razpon. Tem cenovnim razponom pravimo pozicije. 
+Pri tem lahko združijo poljubno število različnih koncentriranih pozicij znotraj enega bazena/sklada.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{pozicije.png}
+        %\caption{Primer porazdelitve likvidnosti}  
+        % vir: Uniswap v3 Core
+\end{figure}
+
 
 S koncetriranjem likvidnosti lahko ponudnik v V3 nudi enako likvidnost kot ponudnik v V2 v določenem cenovnem območju z manj kapitala. Povedano drugače; zaslužijo lahko enako provizij za manj kapitala, saj je njihov denar skoncentriran na območju, kjer se odvija največ trgovalne dejavnosti. Po drugi strani pa lahko z ponudnik V3 z enakim kapitalom kot V2, zagotovi več likvidnosti, za kar pa mora prevzeti več cenovnega tveganja (IL). S tem omogočajo več trgovanja in zato zaslužijo več provizij. 
+Vsaka pozicija mora imeti le dovolj rezerv, da bo dopuščala menjave znotraj svojega določenega obnočja. %Zaradi tega se obnaša kot bazen/sklad konstantnega produkta z večjimi rezervami (temu pravimo virtualne rezerve) znotraj tega obsega.
+V primeru, da se tržna cena premakne izven določenega območja, je likvidnost ponudnika izvzeta iz bazena/sklada in ponudnik ne prejema provizij, dokler se cena ne premakne nazaj v cenovno območje, ki ga je določil oz. dokler ne spremeni mej cenovnega območja. Na tej točki bo pozicija/bazen/sklad tega ponudnika sestavljen le iz enih žetonov. 
+% Rational LPs can reduce their capital costs by concentrating their liquidity in a narrow band around the current price, and adding or removing tokens as the price moves to keep their liquidity active.
 
-V primeru, da se tržna cena premakne izven določenega območja, je likvidnost ponudnika izvzeta iz bazena/sklada in ponudnik ne prejema provizij dokler se cena ne premakne nazaj v cenovno območje, ki ga je določil oz. dokler ne spremeni mej cenovnega območja. 
+
+% \begin{figure}[!ht]
+%     \centering
+%     \includegraphics[width=0.6\textwidth]{virtualne_rezerve.png}
+%         %\caption{Virtualna likvidnost}  
+%         % vir: Uniswap v3 Core
+% \end{figure}
 
 Koncentriranje likvidnosti povečuje kapitalsko učinkovitost, saj so sredstva razporejena tam, kjer je trgovanje najbolj verjetno.
 
