@@ -69,24 +69,9 @@ Uniswap V2 je izšla maja 2020. V2 je uporabnikom omogočila neposredno trgovanj
 V Uniswap v2 je likvidnost enakomerno porazdeljena po cenovni krivulji $x\cdot y = k$, kjer sta $x$ in $y$ količina žetonov X in Y v likvidnostnem bazenu, $k$ pa je konstanta. Ideja je bila ohraniti konstantno razmerje znotraj likvidnostnega sklada/bazena, tako da bi bila skupna vrednost enega žetona vedno enaka skupni vrednosti drugega žetona v skladu/bazenu, ne glede na trenutno medsebojno ceno.  Likvidnost se torej zagotavlja za celotno cenovno območje $(0,\infty)$. V večini likvidnostnih bazenov, ta likvidnost ni nikoli uporabljena. 
 
 Ponudniki likvidnosti Uniswapa V2 zaslužijo provizije le za majhen del svojega kapitala, kar lahko pomeni, da ne morejo ustrezno kriti cenovnega tveganja (IL), ki ga prevzemajo z velikimi zalogami obeh žetonov. Poleg tega so uporabniki pogosto izpostavljeni visokim stopnjam zdrsov (ang. \textit{slippage}), saj je likvidnost porazdeljena po vseh cenovnih območjih. 
-\newline
-Primer zamenjave:
-\begin{enumerate}
-    \item Pred zamenjavo:
-    \begin{itemize}
-        \item Naj bo $X$ trenutna količina ETH v ETH/CRO likvidnostnem skladu: $X = 5$ ETH
-        \item Naj bo $Y$ trenutna količina CRO v ETH/CRO likvidnostnem skladu: $Y = 5000$ CRO 
-        \item Potem je konstantni produkt $k = 5 \cdot 5000 = 25000$
-        \item Naj bo $P_0$ cena ETH žetona: $P_0 = 5000/5 = 1000$ CRO. 
-    \end{itemize}
-    \item Zamenjava: 
-    \begin{itemize}
-        \item Želimo zamenjati 1 ETH za CRO.
-        \item V sklad dodamo 1 ETH žeton, dobimo pa $Y_2 = Y - k/(X+\Delta X) = 5000 - 25000/{6 \text{ETH}} = 833,33$ CRO.
-        \item V skladu je sedaj 6 žetonov ETH in 4166,67 žetonov CRO.
-        \item Cena ETH je sedaj $4166,67/6 = 694,45$ CRO.
-    \end{itemize}
-\end{enumerate}
+
+
+
 
 \subsubsection{Impermanent loss}
 \textbf{Impermanent loss} (IL) je izguba, ki jo ponudnik likvidnosti utrpi, ko zagotovi likvidnost bazenu/skladu potem pa se cene vloženih sredstev spremenijo. IL se pojavi zaradi stalnega uravnovešanja likvidnostnih bazenov, kot odziv na gibanje tržnih cen. Izguba se ne realizira dokler ponudnik likvidnosti ne umakne svojih sredstev iz bazena/sklada. Če se cene žetonov vrnejo v prvotno razmerje IL izgine. Ponudniki likvidnosti za zagotavljanje likvidnosti prejemajo provizije od trgovanja, ki lahko izravnajo IL, vendar lahko na nestabilnih trgih ali med ektremnimi gibanji cen IL preseže zaslužene provizije. 
@@ -113,12 +98,37 @@ Poglejmo si primer IL:
 V Uniswap V2 se za vsako zamenjavo žetonov zaračuna fiksna provizija v višini 0,3 %. Ta provizija se razdeli med ponudnike likvidnosti glede na njihov delež likvidnostnih rezerv. Ko uporabniki izvedejo zamenjavo, se provizije, ki jih plačajo, takoj dodajo k likvidnostnim rezervam. Ponudniki likvidnosti lahko svoj delež provizij poberejo tako, da **burn** svoje likvidnostne tokene, s čimer se odstrani sorazmeren znesek osnovnih rezerv.
 
 \subsubsection{Zdrs (ang. \textit{Slippage})}
+Zdrs je odstotna vrednost, ki opisuje odstotno razliko med žetoni, ki jih ob transakciji dejansko prejemo in pričakovano količino žetonov. Do razlike pride predvsem zaradi sprememb razmerja žetonov v likvidnostnem skladu. Zdrs je ponavadi večji pri velikih transakcijah in v majhnih likvidnostnih skladih.
 
 Ko uporabnik predloži transakcijo na Ethereum-u je hitrost izvedbe transakcije odvisna od cene izvedbe transakcije, ki jo je pripravljen plačati (gas price). Več kot plača gas, hitreje se bo transakcija izvedla. Če transakcija oziroma zamenjava (swap) dolgo čaka na izvedbo, se lahko razmerje valut v likvidnostnem bazenu v tem času spremeni, saj so se med čakanjem izvedle že druge zamenjave. To lahko pomeni, da bo uporabnik zaradi čakanja na izvedbo transakcije dobil manj željenih žetonov kot jih je pričakoval. 
 
 V ta namen je definirana toleranca za zdrs (ang. \textit{Slippage tolerances}), ki pove za koliko se lahko razmerje žetonov spremeni, da se transakcija še vedno izvede. Torej, če se razmerje žetonov v likvidnostnem bazenu med čakanjem transakcije na izvedbo spremeni za več kot to dovoljuje Slippage tolerance, se transakcija ne izvede in Uniswap vrne napako \texttt{INSUFFICIENT\_OUTPUT\_AMOUNT}. 
 
 Definirana je tudi omejitev največ koliko časa lahko transakcija čaka preden se izvede (deadline). Če se transakcija ne izvede do roka se jo prekliče in Uniswap vrne napako Expired. S tem se uporabnika zaščiti pred dolgim čakanjem za izvedbo zamenjave in velikim spremembam cen.
+\newline
+Primer zamenjave z izračunom zdrsa (manjši likvidnostni sklad):
+\begin{enumerate}
+    \item Pred zamenjavo:
+    \begin{itemize}
+        \item Naj bo $X$ trenutna količina ETH v ETH/CRO likvidnostnem skladu: $X = 5$ ETH
+        \item Naj bo $Y$ trenutna količina CRO v ETH/CRO likvidnostnem skladu: $Y = 5000$ CRO 
+        \item Potem je konstantni produkt $k = 5 \cdot 5000 = 25000$
+        \item Naj bo $P_0$ cena ETH žetona: $P_0 = 5000/5 = 1000$ CRO. 
+    \end{itemize}
+    \item Zamenjava: 
+    \begin{itemize}
+        \item Želimo zamenjati 1 ETH za CRO.
+        \item V sklad dodamo 1 ETH žeton, dobimo pa $\Delta Y = Y - k/(X+\Delta X) = 5000 - 25000/{6 \text{ETH}} = 833,33$ CRO.
+        \item $\text{Zdrs} = (1000 - 833,33)/1000 =  16 \%  $
+        \item V skladu je sedaj 6 žetonov ETH in 4166,67 žetonov CRO.
+        \item Cena ETH je sedaj $4166,67/6 = 694,45$ CRO.
+    \end{itemize}
+\end{enumerate}
+\newline
+Primer zdrsa pri večjem likvidnostnem skladu:
+
+Naj bo sedaj v skladu 5000 ETH in 5 mio CRO. $P_0$ je torej enak kot prej. Ko sedaj zamenjamo 1 ETH za CRO, dobimo 999,8 CRO. Zdrs pa je v tem primeru veliko manjši in sicer 0.02 \%. 
+
 
 \subsection{Uniswap V3}
 
