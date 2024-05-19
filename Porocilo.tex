@@ -124,7 +124,7 @@ Primer zamenjave z izračunom zdrsa (manjši likvidnostni sklad):
         \item Cena ETH je sedaj $4166,67/6 = 694,45$ CRO.
     \end{itemize}
 \end{enumerate}
-\newline
+
 Primer zdrsa pri večjem likvidnostnem skladu:
 
 Naj bo sedaj v skladu 5000 ETH in 5 mio CRO. $P_0$ je torej enak kot prej. Ko sedaj zamenjamo 1 ETH za CRO, dobimo 999,8 CRO. Zdrs pa je v tem primeru veliko manjši in sicer 0.02 \%. 
@@ -146,10 +146,16 @@ Pri tem lahko združijo poljubno število različnih koncentriranih pozicij znot
         % vir: Uniswap v3 Core
 \end{figure}
 
+Koncentriranje likvidnosti ponudnikom likvidnosti povečuje kapitalsko učinkovitost, saj so sredstva razporejena tam, kjer je trgovanje najbolj verjetno. Ponudniki likvidnosti lahko v V3 zaslužijo enake provizije za manj kapitala, v primerjavi z V2. 
+Po drugi strani pa lahko ponudnik v V3 z enakim kapitalom kot v V2, zagotovi več likvidnosti, za kar pa mora prevzeti več tveganja IL. 
+Koncentrirana likvidnost ima prednost tudi za trgovce, saj ti zaradi večje likvidnosti v ozkih cenovnih razponih, dobijo boljše cene, kar zmanjšuje zdrs.  
 
-S koncetriranjem likvidnosti lahko ponudnik v V3 nudi enako likvidnost kot ponudnik v V2 v določenem cenovnem območju z manj kapitala. Povedano drugače; zaslužijo lahko enako provizij za manj kapitala, saj je njihov denar skoncentriran na območju, kjer se odvija največ trgovalne dejavnosti. Po drugi strani pa lahko z ponudnik V3 z enakim kapitalom kot V2, zagotovi več likvidnosti, za kar pa mora prevzeti več cenovnega tveganja (IL). S tem omogočajo več trgovanja in zato zaslužijo več provizij. 
-Vsaka pozicija mora imeti le dovolj rezerv, da bo dopuščala menjave znotraj svojega določenega obnočja. %Zaradi tega se obnaša kot bazen/sklad konstantnega produkta z večjimi rezervami (temu pravimo virtualne rezerve) znotraj tega obsega.
+
+% S koncetriranjem likvidnosti lahko ponudnik v V3 nudi enako likvidnost kot ponudnik v V2 v določenem cenovnem območju z manj kapitala. Povedano drugače; zaslužijo lahko enako provizij za manj kapitala, saj je njihov denar skoncentriran na območju, kjer se odvija največ trgovalne dejavnosti. Po drugi strani pa lahko z ponudnik V3 z enakim kapitalom kot V2, zagotovi več likvidnosti, za kar pa mora prevzeti več cenovnega tveganja (IL). S tem omogočajo več trgovanja in zato zaslužijo več provizij. 
+% Vsaka pozicija mora imeti le dovolj rezerv, da bo dopuščala menjave znotraj svojega določenega obnočja. %Zaradi tega se obnaša kot bazen/sklad konstantnega produkta z večjimi rezervami (temu pravimo virtualne rezerve) znotraj tega obsega.
 V primeru, da se tržna cena premakne izven določenega območja, je likvidnost ponudnika izvzeta iz bazena/sklada in ponudnik ne prejema provizij, dokler se cena ne premakne nazaj v cenovno območje, ki ga je določil oz. dokler ne spremeni mej cenovnega območja. Na tej točki bo pozicija/bazen/sklad tega ponudnika sestavljen le iz enih žetonov. 
+
+Koncentriranje likvidnosti in boljše provizije pa imajo tudi svojo ceno, predvsem IL. 
 % Rational LPs can reduce their capital costs by concentrating their liquidity in a narrow band around the current price, and adding or removing tokens as the price moves to keep their liquidity active.
 
 
@@ -160,7 +166,7 @@ V primeru, da se tržna cena premakne izven določenega območja, je likvidnost 
 %         % vir: Uniswap v3 Core
 % \end{figure}
 
-Koncentriranje likvidnosti povečuje kapitalsko učinkovitost, saj so sredstva razporejena tam, kjer je trgovanje najbolj verjetno.
+% Koncentriranje likvidnosti povečuje kapitalsko učinkovitost, saj so sredstva razporejena tam, kjer je trgovanje najbolj verjetno.
 
 \begin{figure}[!ht]
     \centering
@@ -185,13 +191,13 @@ Zaradi koncentrirane likvidnosti ponudnikove likvidnostne pozicije niso več zam
 
 \subsubsection{Prilagodiljive provizije}
 Uniswap V3 je uvedel prilagoljive provizije, kjer lahko ponudnik likvidnosti določi provizijo, glede na ugotovljeno tveganje para žetonov, za katerega zagotavlja likvidnost. Na podlagi volatilnosti para lahko izbira med provizijami v višini 0.05 \%, 0.3 \% in 1 \%. 
+To ponudnikom likvidnosti omogoča večjo fleksibilnost pri izbiri ravni provizij, ki je skladna z njihovimi preferencami in strategijami trgovanja.
 
 
 
+\section{Zaključek}
 
-\subsection{Primerjava}
-
-Čeprav imata tako V2 kot V3 svoje prednosti, je temeljna razlika v kapitalski učinkovitosti in potencialnih donosih za ponudnike likvidnosti. Uvedba koncentrirane likvidnosti v različici V3 je spremenila način zagotavljanja likvidnosti v sistemu Uniswap in ponudila možnost veliko večjih donosov na naložbe. Medtem ko ima V2 enostaven pristop k zagotavljanju likvidnosti, je V3 kompleknejša in zahteva globlje razumevanje tržne dinamike in gibanja cen. Ponudniki likvidnosti morajo aktivno upravljati svoje pozicije in prilagajati cenovna območja za svojo likvidnost. 
+Čeprav imata tako V2 kot V3 svoje prednosti, je temeljna razlika v kapitalski učinkovitosti in potencialnih donosih za ponudnike likvidnosti. Uvedba koncentrirane likvidnosti v različici V3 je spremenila način zagotavljanja likvidnosti v sistemu Uniswap in ponudila možnost veliko večjih donosov na naložbe. Medtem ko ima V2 enostaven pristop k zagotavljanju likvidnosti, je V3 kompleknejša in zahteva globlje razumevanje tržne dinamike in gibanja cen. Ponudniki likvidnosti V3 morajo bolj aktivno upravljati svoje pozicije in prilagajati cenovna območja za svojo likvidnost. 
 
 
 % Uniswap V3 z možnostjo koncentriranja likvidnosti ponudnikom likvidnosti omogoča večjo kapitalsko učinkovitost in manjši zdrs za trgovalce. Pravtako ima V3 tri stopnje provizij, kar pomeni, da lahko ponudniki likvidnosti dobljene provizije prilagodijo tveganju, ki ga prevzemajo. Uniswap V3 ima kompleksnejši AMM model, ki namesto fiksne cene uporablja razpon cen. s tem je cenovno tveganje bolj razpršeno in zmanjšuje IL. 
