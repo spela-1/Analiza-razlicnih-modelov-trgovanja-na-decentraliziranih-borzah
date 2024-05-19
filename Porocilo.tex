@@ -97,38 +97,53 @@ Poglejmo si primer IL:
 \subsubsection{ Provizije}
 V Uniswap V2 se za vsako zamenjavo žetonov zaračuna fiksna provizija v višini 0,3 %. Ta provizija se razdeli med ponudnike likvidnosti glede na njihov delež likvidnostnih rezerv. Ko uporabniki izvedejo zamenjavo, se provizije, ki jih plačajo, takoj dodajo k likvidnostnim rezervam. Ponudniki likvidnosti lahko svoj delež provizij poberejo tako, da **burn** svoje likvidnostne tokene, s čimer se odstrani sorazmeren znesek osnovnih rezerv.
 
-\subsubsection{Zdrs (ang. \textit{Slippage})}
-Zdrs je odstotna vrednost, ki opisuje odstotno razliko med žetoni, ki jih ob transakciji dejansko prejemo in pričakovano količino žetonov. Do razlike pride predvsem zaradi sprememb razmerja žetonov v likvidnostnem skladu. Zdrs je ponavadi večji pri velikih transakcijah in v majhnih likvidnostnih skladih.
+\subsubsection{Vpliv cene (ang. \textit{Price Impact})}
 
-Ko uporabnik predloži transakcijo na Ethereum-u je hitrost izvedbe transakcije odvisna od cene izvedbe transakcije, ki jo je pripravljen plačati (gas price). Več kot plača gas, hitreje se bo transakcija izvedla. Če transakcija oziroma zamenjava (swap) dolgo čaka na izvedbo, se lahko razmerje valut v likvidnostnem bazenu v tem času spremeni, saj so se med čakanjem izvedle že druge zamenjave. To lahko pomeni, da bo uporabnik zaradi čakanja na izvedbo transakcije dobil manj željenih žetonov kot jih je pričakoval. 
-
-V ta namen je definirana toleranca za zdrs (ang. \textit{Slippage tolerances}), ki pove za koliko se lahko razmerje žetonov spremeni, da se transakcija še vedno izvede. Torej, če se razmerje žetonov v likvidnostnem bazenu med čakanjem transakcije na izvedbo spremeni za več kot to dovoljuje Slippage tolerance, se transakcija ne izvede in Uniswap vrne napako \texttt{INSUFFICIENT\_OUTPUT\_AMOUNT}. 
-
-Definirana je tudi omejitev največ koliko časa lahko transakcija čaka preden se izvede (deadline). Če se transakcija ne izvede do roka se jo prekliče in Uniswap vrne napako Expired. S tem se uporabnika zaščiti pred dolgim čakanjem za izvedbo zamenjave in velikim spremembam cen.
+Kot je zgoraj omenjeno je cena žetonov določena s tem na kateri točki v cenovni krivulji smo v danem trenutku. Vsaka transakcija vpliva na sestavo likvidnostnega bazena (torej se premikamo po krvulji) in s tem se spreminja cena žetonov. Spremebo v ceni žetona definiramo kot Price impact, to je razlika med tržno ceno (market price) in tem kako uporabnikova menjava vpliva na likvidnost v bazenu. 
 \newline
-Primer zamenjave z izračunom zdrsa (manjši likvidnostni sklad):
+Primer zamenjave z izračunom vpliva cene (manjši likvidnostni sklad):
 \begin{enumerate}
     \item Pred zamenjavo:
     \begin{itemize}
-        \item Naj bo $X$ trenutna količina ETH v ETH/CRO likvidnostnem skladu: $X = 5$ ETH
-        \item Naj bo $Y$ trenutna količina CRO v ETH/CRO likvidnostnem skladu: $Y = 5000$ CRO 
-        \item Potem je konstantni produkt $k = 5 \cdot 5000 = 25000$
-        \item Naj bo $P_0$ cena ETH žetona: $P_0 = 5000/5 = 1000$ CRO. 
+        \item Naj bo $X$ trenutna količina ETH v ETH/CRO likvidnostnem skladu: $X = 50$ ETH
+        \item Naj bo $Y$ trenutna količina CRO v ETH/CRO likvidnostnem skladu: $Y = 50 000$ CRO 
+        \item Potem je konstantni produkt $k = 50 \cdot 50 000 = 2 500 000$
+        \item Naj bo $P_0$ cena ETH žetona: $P_0 = 50000/50 = 1000$ CRO. 
     \end{itemize}
     \item Zamenjava: 
     \begin{itemize}
         \item Želimo zamenjati 1 ETH za CRO.
-        \item V sklad dodamo 1 ETH žeton, dobimo pa $\Delta Y = Y - k/(X+\Delta X) = 5000 - 25000/{6 \text{ETH}} = 833,33$ CRO.
-        \item $\text{Zdrs} = (1000 - 833,33)/1000 =  16 \%  $
-        \item V skladu je sedaj 6 žetonov ETH in 4166,67 žetonov CRO.
-        \item Cena ETH je sedaj $4166,67/6 = 694,45$ CRO.
+        \item V sklad dodamo 1 ETH žeton, dobimo pa $\Delta Y = Y - k/(X+\Delta X) = 50 000 - 2 500 000/{51 \text{ETH}} = 980.39$ CRO.
+        \item $\text{vpliv cene} = (1000 - 980.39)/1000 =  1,9 \%  $   
+        \item V skladu je sedaj 51 žetonov ETH in 49019,61 žetonov CRO.   (skripta:  49023 je uredu če gre provizija nazaj v likvidnostni bazen?)
+        \item Cena ETH je sedaj $49019,61/51 = 961,17$ CRO.
     \end{itemize}
 \end{enumerate}
 
-Primer zdrsa pri večjem likvidnostnem skladu:
+V zgornjem izračunu ni upoštevana provizija, če pa bi bila, bi v manjavi uporabnik dobil $977,45$ CRO.
 
-Naj bo sedaj v skladu 5000 ETH in 5 mio CRO. $P_0$ je torej enak kot prej. Ko sedaj zamenjamo 1 ETH za CRO, dobimo 999,8 CRO. Zdrs pa je v tem primeru veliko manjši in sicer 0.02 \%. 
+Izračun primerjamo z razultatom, ki ga dobiva v najini kopiji uniswapa. Pripravili sva skripto kjer definirava likvidnostni bazen z 50 žetoni kovanca1 in 50000 žetoni kovanca2. Nato sva izvedli zamenjavo 1 kovanca1 in zanj sva dobili 977 kovanca2. To se ujema z izračunom, saj se upošteva tudi provizija. 
 
+Primer Price Impact-a pri večjem likvidnostnem skladu:
+
+Naj bo sedaj v skladu 5000 ETH in 5 mio CRO. $P_0$ je torej enak kot prej. Ko sedaj zamenjamo 1 ETH za CRO, dobimo 999,8 CRO oz 996,8 CRO če upoštevamo provizijo. Price Impact pa je v tem primeru veliko manjši in sicer 0.02 \%. 
+
+Skripto ponovno zaženeva še z večjim likvidnostnim bazenom in dobiva razultat: za menjavo 1 kovanca1 dobimo 996 kovanca2.
+
+\subsubsection{Zdrs (ang. \textit{Slippage})}
+% Zdrs je odstotna vrednost, ki opisuje odstotno razliko med žetoni, ki jih ob transakciji dejansko prejemo in pričakovano količino žetonov. Do razlike pride predvsem zaradi sprememb razmerja žetonov v likvidnostnem skladu. 
+
+Ko uporabnik predloži transakcijo na Ethereum-u je hitrost izvedbe transakcije odvisna od cene izvedbe transakcije, ki jo je pripravljen plačati (gas price). Več kot plača gas, hitreje se bo transakcija izvedla. Če transakcija oziroma zamenjava (swap) dolgo čaka na izvedbo, se lahko razmerje valut v likvidnostnem bazenu v tem času spremeni, saj so se med čakanjem izvedle že druge zamenjave. To lahko pomeni, da bo uporabnik zaradi čakanja na izvedbo transakcije dobil manj željenih žetonov kot jih je pričakoval. Zdrs je razlika v cenah po kateri mislimo da bomo kupovali žeton in po kateri potem dejansko kupimo. Zdrs je ponavadi večji pri velikih transakcijah in v majhnih likvidnostnih skladih.
+
+Da bi uporabnike zaščitili pred velikimi izgubami zaradi zdrsa je definirana toleranca za zdrs (ang. \textit{Slippage tolerances}), ki pove za koliko se lahko razmerje žetonov spremeni, da se transakcija še vedno izvede. Torej, če se razmerje žetonov v likvidnostnem bazenu med čakanjem transakcije na izvedbo spremeni za več kot to dovoljuje Slippage tolerance, se transakcija ne izvede in Uniswap vrne napako \texttt{INSUFF-ICIENT\_OUTPUT\_AMOUNT}. 
+
+Definirana je tudi omejitev največ koliko časa lahko transakcija čaka preden se izvede (deadline). Če se transakcija ne izvede do roka se jo prekliče in Uniswap vrne napako Expired. S tem se uporabnika zaščiti pred dolgim čakanjem za izvedbo zamenjave in velikim spremembam cen.
+
+\medskip
+
+Vrnimo se k prejšnjem primeru. Denimo, da želimo narediti zamenjavo 1 ETH žetona, ko je v likvidnostnem skladu $X = 50$ ETH in $Y = 50 000$ CRO. Nek drug uporabnik je bil za izvedbo transakcije pripravljen plačati več, zato on prvi izvede zamenjavo prav tako 1 ETH za CRO. Kot smo izračunali zgoraj je po njegovi zamenjavi stanje v likvidnostnem skaldu enako $X = 51$ ETH in $Y = 49019,61$ CRO. Cena ETH je sedaj $49019,61/51 = 961,17$ CRO. Potem pride na vrsto za izvedbo trnaskcije prvi uporabnik in zamenja 1 ETH za 942,68 CRO po novi ceni. Za 1 ETH dobi 37,71 CRO manj kot drug uporabnik.
+Zdrs je razlika v ceni po kateri pričakujemo, da bomo kupili žetone, in po kateri potem dejansko kupimo. V tem primeru je to $1000 - 961,17 = 38.83$. 
+Če pa izvedemo isti scenarij v primeru z večjim likvidnostnim skladom je zdrs le $0,4$ in za enako menjavo dobi prvi uporabnik le 0,4 CRO manj od drugega drugega uporabnika.
 
 \subsection{Uniswap V3}
 
