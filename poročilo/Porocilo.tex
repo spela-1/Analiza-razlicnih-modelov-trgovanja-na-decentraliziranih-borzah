@@ -70,7 +70,7 @@ Decentraliziran vidik protokola pomeni, da borze ne vodi nobena centraizirana av
 Uniswap V2 je izšla maja 2020. V2 je uporabnikom omogočila neposredno trgovanje s katerima koli ERC-20 žetonoma, namesto preko ETH (kot v Uniswap-V1). S tem se je zmanjšalo število transakcij in prihranilo na t.i \textit{gas fees}. Verzija je uvedla decentraliziran cenovni orakelj, ki je ponujal zanesljive podatke o cenah v realnem času. S tem je protokol postal bolj odporen proti manipulaciji s cenami. Uvedli so tudi t.i \textit{flash swaps}, ki so omogočile, da si uporabniki izposodijo poljubno količino žetonov iz likvidnostega sklada, z njimi izvedejo želeno dejanje in v okviru iste transakcije vrnejo izposojene žetone. 
 
 \subsubsection{Likvidnost} 
-V Uniswap v2 je likvidnost enakomerno porazdeljena po cenovni krivulji $x\cdot y = k$, kjer sta $x$ in $y$ količina žetonov X in Y v likvidnostnem bazenu, $k$ pa je konstanta. Ideja je bila ohraniti konstantno razmerje znotraj likvidnostnega sklada, tako da bi bila skupna vrednost enega žetona vedno enaka skupni vrednosti drugega žetona v skladu, ne glede na trenutno medsebojno ceno.  Likvidnost se torej zagotavlja za celotno cenovno območje $(0,\infty)$. V večini likvidnostnih bazenov, ta likvidnost ni nikoli uporabljena. 
+V Uniswap v2 je likvidnost enakomerno porazdeljena po cenovni krivulji $x\cdot y = k$, kjer sta $x$ in $y$ količina žetonov X in Y v likvidnostnem skladu, $k$ pa je konstanta. Ideja je bila ohraniti konstantno razmerje znotraj likvidnostnega sklada, tako da bi bila skupna vrednost enega žetona vedno enaka skupni vrednosti drugega žetona v skladu, ne glede na trenutno medsebojno ceno.  Likvidnost se torej zagotavlja za celotno cenovno območje $(0,\infty)$. V večini likvidnostnih skladov, ta likvidnost ni nikoli uporabljena. 
 
 Ponudniki likvidnosti Uniswapa V2 zaslužijo provizije le za majhen del svojega kapitala, kar lahko pomeni, da ne morejo ustrezno kriti cenovnega tveganja (IL), ki ga prevzemajo z velikimi zalogami obeh žetonov. Poleg tega so uporabniki pogosto izpostavljeni visokim stopnjam zdrsov (ang. \textit{slippage}), saj je likvidnost porazdeljena po vseh cenovnih območjih. 
 
@@ -87,13 +87,13 @@ Poglejmo si primer IL:
     \item Po tem, ko dodamo likvidnost se cena ETH podvoji in se trguje po ceni $P_1 = 2000$ CRO. (Arbitražni trgovci bodo v sklad dodali CRO in odstranili ETH, da se cena ETH/CRO ujema z zunanjimi borzami).
     \item Po formuli konstantnega produkta $X \cdot Y=k$ izračunamo $k$: $$5~(ETH) \cdot 5000 (CRO) = 25000.$$
     \item Izračunajmo imetje po arbitražnem trgovanju:
-        $$likvidnot_{ETH} = \sqrt{k/P_1} = \sqrt{25000/2000}= 3,5355$$
-        $$likvidnot_{CRO} = \sqrt{k \cdot P_1} = \sqrt{25000 \cdot 2000}=~7071,0678$$
+        $$likvidnost_{ETH} = \sqrt{k/P_1} = \sqrt{25000/2000}= 3,5355$$
+        $$likvidnost_{CRO} = \sqrt{k \cdot P_1} = \sqrt{25000 \cdot 2000}=~7071,0678$$
         
     \item Če sedaj iz sklada umaknemo likvidnost prejmemo 14142,0678~CRO
-    ($3,5355~ETH~\cdot~2000 CRO + 7071,0678 CRO$).
-    \item Če bi žetone držali namesto jih dali v sklad bi sedaj imeli 15000~CRO ($5 ETH \cdot 2000 CRO + 5000 CRO$).
-    \item V tem primeru je naš IL 15000-14142 = 858 CRO.
+    ($3,5355~ETH~\cdot~2000 CRO + 7071,0678~CRO$).
+    \item Če bi žetone držali namesto jih dali v sklad bi sedaj imeli 15000~CRO ($5~ETH \cdot 2000~CRO + 5000~CRO$).
+    \item V tem primeru je naš IL $15000~CRO - 14142~CRO = 858~CRO$.
 
 
 \end{itemize}
@@ -103,7 +103,7 @@ V Uniswap V2 se za vsako zamenjavo žetonov zaračuna fiksna provizija v višini
 
 \subsubsection{Vpliv cene (ang. \textit{Price Impact})}
 
-Kot je zgoraj omenjeno je cena žetonov določena s tem na kateri točki v cenovni krivulji smo v danem trenutku. Vsaka transakcija vpliva na sestavo likvidnostnega sklada (torej se premikamo po krvulji) in s tem se spreminja cena žetonov. Spremebo v ceni žetona definiramo kot \textit{Price impact}, ki je razlika med tržno ceno (ang. \textit{market price}) in tem kako uporabnikova menjava vpliva na likvidnost v bazenu. 
+Kot je zgoraj omenjeno je cena žetonov določena s tem na kateri točki v cenovni krivulji smo v danem trenutku. Vsaka transakcija vpliva na sestavo likvidnostnega sklada (torej se premikamo po krvulji) in s tem se spreminja cena žetonov. Spremebo v ceni žetona definiramo kot \textit{Price impact}, ki je razlika med tržno ceno (ang. \textit{market price}) in tem kako uporabnikova menjava vpliva na ceno žetona v skladu. 
 \newline
 Primer zamenjave z izračunom vpliva cene (manjši likvidnostni sklad):
 \begin{enumerate}
@@ -117,31 +117,33 @@ Primer zamenjave z izračunom vpliva cene (manjši likvidnostni sklad):
     \item Zamenjava: 
     \begin{itemize}
         \item Želimo zamenjati 1 ETH za CRO.
-        \item V sklad dodamo 1 ETH žeton, dobimo pa $\Delta Y = Y - k/(X+\Delta X) = 50 000 - 2 500 000/{51 \text{ETH}} = 980.39$ CRO.
+        \item V sklad dodamo 1 ETH žeton, dobimo pa
+        $\Delta Y = Y - k/(X+\Delta X) $ \newline $= 50 000 - 2 500 000/{51 \text{ETH}} = 980.39$ CRO.
         \item $\text{vpliv cene} = (1000 - 980.39)/1000 =  1,9 \%  $   
-        \item V skladu je sedaj 51 žetonov ETH in 49019,61 žetonov CRO.   (skripta:  49023 je uredu če gre provizija nazaj v likvidnostni bazen?)
+        \item V skladu je sedaj 51 žetonov ETH in 49019,61 žetonov CRO.   
+        % (skripta:  49023 je uredu če gre provizija nazaj v likvidnostni bazen?)
         \item Cena ETH je sedaj $49019,61/51 = 961,17$ CRO.
     \end{itemize}
 \end{enumerate}
 
 V zgornjem izračunu ni upoštevana provizija, če pa bi bila, bi v manjavi uporabnik dobil $977,45$ CRO.
 
-Izračun primerjamo z razultatom, ki ga dobiva v najini kopiji uniswapa. Pripravili sva skripto kjer definirava likvidnostni bazen z 50 žetoni kovanca1 in 50000 žetoni kovanca2. Nato sva izvedli zamenjavo 1 kovanca1 in zanj sva dobili 977 kovanca2. To se ujema z izračunom, saj se upošteva tudi provizija, ki jo plačamo. 
+Izračun primerjamo z razultatom, ki ga dobiva v najini kopiji uniswapa. Pripravili sva skripto kjer definirava likvidnostni sklad z 50 žetoni kovanca1 in 50000 žetoni kovanca2. Nato sva izvedli zamenjavo 1 kovanca1 in zanj sva dobili 977 kovanca2. To se ujema z izračunom, saj se upošteva tudi provizija, ki jo plačamo. 
 
 Primer Price Impact-a pri večjem likvidnostnem skladu:
 
 Naj bo sedaj v skladu 5000 ETH in 5 mio CRO. $P_0$ je torej enak kot prej. Ko sedaj zamenjamo 1 ETH za CRO, dobimo 999,8 CRO oz 996,8 CRO če upoštevamo provizijo. Price Impact pa je v tem primeru veliko manjši in sicer 0.02 \%. 
 
-Skripto ponovno zaženeva še z večjim likvidnostnim bazenom in dobiva razultat: za menjavo 1 kovanca1 dobimo 996 kovanca2.
+Skripto ponovno zaženeva še z večjim likvidnostnim skladom in dobiva razultat: za menjavo 1 kovanca1 dobimo 996 kovanca2.
 
 \subsubsection{Zdrs (ang. \textit{Slippage})}
 % Zdrs je odstotna vrednost, ki opisuje odstotno razliko med žetoni, ki jih ob transakciji dejansko prejemo in pričakovano količino žetonov. Do razlike pride predvsem zaradi sprememb razmerja žetonov v likvidnostnem skladu. 
 
-Ko uporabnik predloži transakcijo na Ethereum-u je hitrost izvedbe transakcije odvisna od cene izvedbe transakcije, ki jo je pripravljen plačati (ang. \textit{gas price}). Več kot plača gas, hitreje se bo transakcija izvedla. Če transakcija oziroma zamenjava dolgo čaka na izvedbo, se lahko razmerje valut v likvidnostnem bazenu v tem času spremeni, saj so se med čakanjem izvedle že druge zamenjave. To lahko pomeni, da bo uporabnik zaradi čakanja na izvedbo transakcije dobil manj željenih žetonov kot jih je pričakoval. Zdrs je razlika v cenah po kateri mislimo da bomo kupovali žeton in po kateri potem dejansko kupimo. Zdrs je ponavadi večji pri velikih transakcijah in v majhnih likvidnostnih skladih.
+Ko uporabnik predloži transakcijo na Ethereum-u je hitrost izvedbe transakcije odvisna od cene izvedbe transakcije, ki jo je pripravljen plačati (ang. \textit{gas price}). Več kot plača gas, hitreje se bo transakcija izvedla. Če transakcija oziroma zamenjava dolgo čaka na izvedbo, se lahko razmerje valut v likvidnostnem skladu v tem času spremeni, saj so se med čakanjem izvedle že druge zamenjave. To lahko pomeni, da bo uporabnik zaradi čakanja na izvedbo transakcije dobil manj željenih žetonov kot jih je pričakoval. Zdrs je razlika v cenah po kateri mislimo da bomo kupovali žeton in po kateri potem dejansko kupimo. Zdrs je ponavadi večji pri velikih transakcijah in v majhnih likvidnostnih skladih.
 
-Da bi uporabnike zaščitili pred velikimi izgubami zaradi zdrsa je definirana toleranca za zdrs (ang. \textit{Slippage tolerances}), ki pove za koliko se lahko razmerje žetonov spremeni, da se transakcija še vedno izvede. Torej, če se razmerje žetonov v likvidnostnem bazenu med čakanjem transakcije na izvedbo spremeni za več kot to dovoljujetoleranca za zdrs, se transakcija ne izvede in Uniswap vrne napako \texttt{INSUFF-ICIENT\_OUTPUT\_AMOUNT}. 
+Da bi uporabnike zaščitili pred velikimi izgubami zaradi zdrsa je definirana toleranca za zdrs (ang. \textit{Slippage tolerances}), ki pove za koliko se lahko razmerje žetonov spremeni, da se transakcija še vedno izvede. Torej, če se razmerje žetonov v likvidnostnem skladu med čakanjem transakcije na izvedbo spremeni za več kot to dovoljuje toleranca za zdrs, se transakcija ne izvede in Uniswap vrne napako \texttt{INSUFFICIENT\_OUTPUT\_AMOUNT}. 
 
-Definirana je tudi omejitev največ koliko časa lahko transakcija čaka preden se izvede (ang \textit{deadline}). Če se transakcija ne izvede do roka, se jo prekliče in Uniswap vrne napako Expired. S tem se uporabnika zaščiti pred dolgim čakanjem na izvedbo zamenjave in velikimi spremembami cen.
+Definirana je tudi omejitev največ koliko časa lahko transakcija čaka preden se izvede (ang \textit{deadline}). Če se transakcija ne izvede do roka, se jo prekliče in Uniswap vrne napako Expired. S tem se uporabnika zaščiti pred dolgim čakanjem na izvedbo zamenjave in velikimi spremembam cen.
 
 \medskip
 
@@ -160,7 +162,7 @@ Pri tem lahko združijo poljubno število različnih koncentriranih pozicij znot
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{pozicije.png}
+    \includegraphics[width=0.7\textwidth]{pozicije.png}
         %\caption{Primer porazdelitve likvidnosti}  
         % vir: Uniswap v3 Core
 \end{figure}
@@ -168,13 +170,15 @@ Pri tem lahko združijo poljubno število različnih koncentriranih pozicij znot
 Koncentriranje likvidnosti ponudnikom likvidnosti povečuje kapitalsko učinkovitost, saj so sredstva razporejena tam, kjer je trgovanje najbolj verjetno. Ponudniki likvidnosti lahko v V3 zaslužijo enake provizije za manj kapitala, v primerjavi z V2. 
 Po drugi strani pa lahko ponudnik v V3 z enakim kapitalom kot v V2, zagotovi več likvidnosti, za kar pa mora prevzeti več tveganja IL. 
 Koncentrirana likvidnost ima prednost tudi za trgovce, saj ti zaradi večje likvidnosti v ozkih cenovnih razponih, dobijo boljše cene, kar zmanjšuje zdrs.  
-
+Koncentriranje likvidnosti in boljše provizije pa imajo tudi svojo ceno, predvsem v IL.
 
 % S koncetriranjem likvidnosti lahko ponudnik v V3 nudi enako likvidnost kot ponudnik v V2 v določenem cenovnem območju z manj kapitala. Povedano drugače; zaslužijo lahko enako provizij za manj kapitala, saj je njihov denar skoncentriran na območju, kjer se odvija največ trgovalne dejavnosti. Po drugi strani pa lahko z ponudnik V3 z enakim kapitalom kot V2, zagotovi več likvidnosti, za kar pa mora prevzeti več cenovnega tveganja (IL). S tem omogočajo več trgovanja in zato zaslužijo več provizij. 
 % Vsaka pozicija mora imeti le dovolj rezerv, da bo dopuščala menjave znotraj svojega določenega obnočja. %Zaradi tega se obnaša kot bazen/sklad konstantnega produkta z večjimi rezervami (temu pravimo virtualne rezerve) znotraj tega obsega.
 V primeru, da se tržna cena premakne izven določenega območja, je likvidnost ponudnika izvzeta iz sklada in ponudnik ne prejema provizij, dokler se cena ne premakne nazaj v cenovno območje, ki ga je določil oz. dokler ne spremeni mej cenovnega območja. Na tej točki bo pozicija tega ponudnika sestavljen le iz enih žetonov. 
 
-Koncentriranje likvidnosti in boljše provizije pa imajo tudi svojo ceno, predvsem v IL. 
+Na primer, da smo tako kot prej v ETH/CRO likvidnostni sklad  dodali enako vrednost ETH in CRO npr. 5 ETH in 5000 CRO pri ceni ETH  $P_0 = 1000$ CRO. Odločimo se, da bomo ponujali likvidnost v območju cene ETH med 800 CRO in 1200 CRO, torej se bo naš kapital uporabljal le dokler se bo cena gibala v tem območju. Na začetku smo v likvidnostni sklad dodali enako vrednost obeh žetonovo, torej je razmerje žetonov ki nam pripada pri ceni ETH $P_0 = 1000$ CRO enako 50:50. Ko se tržna cena žetonov spremeni, bodo arbitražni trgovci uravnavali  razmerje v skladu, da se bodo cene ujemale z zunanjim svetom. Ko cena ETH pade na $P_a = 800$ CRO ali nižje, se razmerje naših žetonov v skladu spremeni na 100:0, torej imamo le ETH žetone. Obratno se zgodi, če cena ETH zraste na $P_b = 1200$ CRO ali višje, takrat nam v skladu ostanejo le CRO žetoni.
+
+ 
 % Rational LPs can reduce their capital costs by concentrating their liquidity in a narrow band around the current price, and adding or removing tokens as the price moves to keep their liquidity active.
 
 
