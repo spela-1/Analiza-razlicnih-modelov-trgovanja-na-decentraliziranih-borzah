@@ -40,8 +40,6 @@ const Token: TokenContract = artifacts.require('Token')
 
 const networkName = network.name
 
-// const UNISWAP_ROUTER_ADDRESS = "TODO - TO KAR PRIDE IZ DEPLOYMENTA" // "0xF09BabdC20d93a7D6315C112e47C825cF8E6f1c6"
-// const UNISWAP_FACTORY_ADDRESS = "TODO - TO KAR PRIDE IZ DEPLOYMENTA" // "0x79487b724376278D1872a0fd250Db3C675Af38C1"
 
 const UNISWAP_ROUTER_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 const UNISWAP_FACTORY_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
@@ -140,16 +138,6 @@ async function bootstrapLiquidityPairPools(deployerOrigin: HardhatEthersSigner) 
         }
     }
 }
-
-// jst mislm da tok majhnega bazena, da bi bil 5 in 5000 tokenov notr ne naredi, ker je pac premejhen
-// Error: VM Exception while processing transaction: reverted with reason string 'ds-math-sub-underflow'
-// namesto da narediva tocno tak bazen ga mal spremeniva? 
-
-// 99999999999999999999700 kok sva nardile tokna - tok kokr ga je v likvidnostnem bazenu
-// 99999999999999999899800
-
-// 99999999999999999700000
-// 99999999999999999700000
 
 
 async function runUniswap(num: number,
