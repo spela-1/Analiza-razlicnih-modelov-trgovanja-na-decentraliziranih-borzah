@@ -31,6 +31,15 @@ dY1 = k/(X1 +dX) - Y1 % predznak od dY je -
 razlika = dY - dY1;
 zdrs = p0 - p1
 
+%% Impact (funkcija)
+% grafični prikaz kako se spreminja cena po korakih ko menjaš v različno vlkih liquidity
+% poolih
+hold on
+graf(5,5000,1,20)
+graf(50,50000,1,20)
+graf(500,500000,1,20)
+graf(5000,5000000,1,20)
+legend('5 X', '50 X', '500 X', '5000 X')
 
 %% uniswap 3
 Xr = 50 % 2000;   % X = 5000;                  % realne rezerve
